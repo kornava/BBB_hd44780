@@ -1,0 +1,237 @@
+/*
+ ============================================================================
+ Name        : bbb_cross_compilation.c
+ Author      : Saif Elhak AWAINIA
+ Version     :
+ Copyright   : GPL
+ Description : Hello World in C, Ansi-style
+ ============================================================================
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "BBBio_lib/BBBiolib.h"
+
+void init_display_pins()
+{
+	iolib_init();
+		BBBIO_sys_Enable_GPIO(BBBIO_GPIO1);
+		BBBIO_sys_Enable_GPIO(BBBIO_GPIO2);
+
+		BBBIO_GPIO_set_dir(BBBIO_GPIO2 , BBBIO_GPIO_PIN_11 ,	// Input
+				   BBBIO_GPIO_PIN_2 | BBBIO_GPIO_PIN_3 | BBBIO_GPIO_PIN_5 | BBBIO_GPIO_PIN_4
+				    );		// Output
+		BBBIO_GPIO_set_dir(BBBIO_GPIO1 , BBBIO_GPIO_PIN_11 , BBBIO_GPIO_PIN_13 | BBBIO_GPIO_PIN_12 | BBBIO_GPIO_PIN_14 | BBBIO_GPIO_PIN_15);
+
+		BBBIO_GPIO_set_dir(BBBIO_GPIO0 , BBBIO_GPIO_PIN_11 , BBBIO_GPIO_PIN_23 | BBBIO_GPIO_PIN_26);
+
+}
+
+void blinking()
+{
+	pin_high(8,12);
+	iolib_delay_ms(500);
+	pin_low(8,12);
+	iolib_delay_ms(500);
+	pin_high(8,12);
+	iolib_delay_ms(500);
+	pin_low(8,12);
+	iolib_delay_ms(500);
+	pin_high(8,12);
+	iolib_delay_ms(500);
+	pin_low(8,12);
+	iolib_delay_ms(500);
+	pin_high(8,12);
+	iolib_delay_ms(500);
+	pin_low(8,12);
+}
+
+void activate_display()
+{
+	//pin_high(8,16);
+	BBBIO_GPIO_high(BBBIO_GPIO1 , BBBIO_GPIO_PIN_14);
+
+	iolib_delay_ms(100);
+
+	BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_14);
+
+	//pin_low(8,16);
+}
+
+void activate_cursor()
+{
+	//pin_low(8,15); //RS low => command
+	BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_15);
+
+	BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_2);
+	BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_3);
+	BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_5);
+	BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_4);
+	BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_13);
+	BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_12);
+	BBBIO_GPIO_low(BBBIO_GPIO0 , BBBIO_GPIO_PIN_23);
+	BBBIO_GPIO_low(BBBIO_GPIO0 , BBBIO_GPIO_PIN_26);
+
+	activate_display();
+}
+
+void display_off()
+{
+	//pin_low(8,15); //RS low => command
+	BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_15);
+
+	BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_2);
+	BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_3);
+	BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_5);
+	BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_4);
+	BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_13);
+	BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_12);
+	BBBIO_GPIO_low(BBBIO_GPIO0 , BBBIO_GPIO_PIN_23);
+	BBBIO_GPIO_low(BBBIO_GPIO0 , BBBIO_GPIO_PIN_26);
+
+	activate_display();
+}
+
+void clear_display()
+{
+	//pin_low(8,15); //RS low => command
+	BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_15);
+
+	BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_2);
+	BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_3);
+	BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_5);
+	BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_4);
+	BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_13);
+	BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_12);
+	BBBIO_GPIO_low(BBBIO_GPIO0 , BBBIO_GPIO_PIN_23);
+	BBBIO_GPIO_low(BBBIO_GPIO0 , BBBIO_GPIO_PIN_26);
+
+	activate_display();
+}
+
+
+void write_cynapsys()
+{
+		//pin_low(8,15); //RS high => caracter mode
+		BBBIO_GPIO_high(BBBIO_GPIO1 , BBBIO_GPIO_PIN_15);
+
+		//C
+		BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_2);
+		BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_3);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_5);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_4);
+
+		BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_13);
+		BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_12);
+		BBBIO_GPIO_high(BBBIO_GPIO0 , BBBIO_GPIO_PIN_23);
+		BBBIO_GPIO_low(BBBIO_GPIO0 , BBBIO_GPIO_PIN_26);
+
+		activate_display();
+
+		//Y
+		BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_2);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_3);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_5);
+		BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_4);
+
+		BBBIO_GPIO_high(BBBIO_GPIO1 , BBBIO_GPIO_PIN_13);
+		BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_12);
+		BBBIO_GPIO_high(BBBIO_GPIO0 , BBBIO_GPIO_PIN_23);
+		BBBIO_GPIO_low(BBBIO_GPIO0 , BBBIO_GPIO_PIN_26);
+		activate_display();
+
+		//N
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_2);
+		BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_3);
+		BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_5);
+		BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_4);
+
+		BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_13);
+		BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_12);
+		BBBIO_GPIO_high(BBBIO_GPIO0 , BBBIO_GPIO_PIN_23);
+		BBBIO_GPIO_low(BBBIO_GPIO0 , BBBIO_GPIO_PIN_26);
+		activate_display();
+
+		//A
+		BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_2);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_3);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_5);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_4);
+
+		BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_13);
+		BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_12);
+		BBBIO_GPIO_high(BBBIO_GPIO0 , BBBIO_GPIO_PIN_23);
+		BBBIO_GPIO_low(BBBIO_GPIO0 , BBBIO_GPIO_PIN_26);
+		activate_display();
+
+		//P
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_2);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_3);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_5);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_4);
+
+		BBBIO_GPIO_high(BBBIO_GPIO1 , BBBIO_GPIO_PIN_13);
+		BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_12);
+		BBBIO_GPIO_high(BBBIO_GPIO0 , BBBIO_GPIO_PIN_23);
+		BBBIO_GPIO_low(BBBIO_GPIO0 , BBBIO_GPIO_PIN_26);
+		activate_display();
+
+		//S
+		BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_2);
+		BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_3);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_5);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_4);
+
+		BBBIO_GPIO_high(BBBIO_GPIO1 , BBBIO_GPIO_PIN_13);
+		BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_12);
+		BBBIO_GPIO_high(BBBIO_GPIO0 , BBBIO_GPIO_PIN_23);
+		BBBIO_GPIO_low(BBBIO_GPIO0 , BBBIO_GPIO_PIN_26);
+		activate_display();
+
+				//Y
+		BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_2);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_3);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_5);
+		BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_4);
+
+		BBBIO_GPIO_high(BBBIO_GPIO1 , BBBIO_GPIO_PIN_13);
+		BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_12);
+		BBBIO_GPIO_high(BBBIO_GPIO0 , BBBIO_GPIO_PIN_23);
+		BBBIO_GPIO_low(BBBIO_GPIO0 , BBBIO_GPIO_PIN_26);
+		activate_display();
+
+		//S
+		BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_2);
+		BBBIO_GPIO_high(BBBIO_GPIO2 , BBBIO_GPIO_PIN_3);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_5);
+		BBBIO_GPIO_low(BBBIO_GPIO2 , BBBIO_GPIO_PIN_4);
+
+		BBBIO_GPIO_high(BBBIO_GPIO1 , BBBIO_GPIO_PIN_13);
+		BBBIO_GPIO_low(BBBIO_GPIO1 , BBBIO_GPIO_PIN_12);
+		BBBIO_GPIO_high(BBBIO_GPIO0 , BBBIO_GPIO_PIN_23);
+		BBBIO_GPIO_low(BBBIO_GPIO0 , BBBIO_GPIO_PIN_26);
+		activate_display();
+
+
+
+
+}
+
+
+int main(void) {
+
+	init_display_pins();
+
+	//display_off();
+	//clear_display();
+	//activate_cursor();
+	//write_cynapsys();
+
+
+
+
+	iolib_free();
+	puts("DONE");
+	return(0);
+
+}
